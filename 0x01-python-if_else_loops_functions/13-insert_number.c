@@ -2,43 +2,54 @@
 #include "lists.h"
 
 /**
- * *insert_node - inserts a number into a sorted singly linked list
- * @head: pointer to address of head of list
- * @number: integer to be include in new node
- * Return: address of new node, or NULL if it failed
+ * insert_node - Inserts a number into a sorted singly linked list.
+ *
+ * @head: Double pointer to a singly linked list
+ *
+ * @number: Value of the new node.
+ *
+ * Return: The address of the new node, or NULL if it failed.
  */
+
 listint_t *insert_node(listint_t **head, int number)
 {
-	listint_t *newnode, *temp;
+	int flag = 0;
+	listint_t *new_node = NULL, *actual = NULL, *after = NULL;
 
-	newnode = malloc(sizeof(listint_t));
-	if (newnode == NULL)
+	if (head == NULL)
 		return (NULL);
+	new_node = malloc(sizeof(listint_t));
+	if (!new_node)
+		return (NULL);
+	new_node->n = number, new_node->next = NULL;
 	if (*head == NULL)
 	{
-		newnode->n = number;
-		newnode->next = *head;
-		*head = newnode;
-		return (newnode);
+		*head = new_node;
+		return (*head);
 	}
-	else if (number <= (*head)->n)
+	actual = *head;
+	if (number <= actual->n)
 	{
-		newnode->n = number;
-		newnode->next = *head;
-		*head = newnode;
-		return (newnode);
+		new_node->next = actual, *head = new_node;
+		return (*head);
 	}
-	else
+	if (number > actual->n && !actual->next)
 	{
-		temp = *head;
-		while (temp->next != NULL && number > temp->next->n)
-		{
-			temp = temp->next;
-		}
-		newnode->n = number;
-		newnode->next = temp->next;
-		temp->next = newnode;
-		return (newnode);
+		actual->next = new_node;
+		return (new_node);
 	}
-	return (NULL);
+	after = actual->next;
+	while (actual)
+	{
+		if (!after)
+			actual->next = new_node, flag = 1;
+		else if (after->n == number)
+			actual->next = new_node, new_node->next = after, flag = 1;
+		else if (after->n > number && actual->n < number)
+			actual->next = new_node, new_node->next = after, flag = 1;
+		if (flag)
+			break;
+		after = after->next, actual = actual->next;
+	}
+	return (new_node);
 }
