@@ -1,1 +1,1 @@
-0x13-javascript-objects-scopes-closures
+javascript-objects-scopes-closures
